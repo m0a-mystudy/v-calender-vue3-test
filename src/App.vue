@@ -1,51 +1,34 @@
 <template>
-  <v-date-picker v-model="range" mode="dateTime" is24hr is-range>
-      <template v-slot="{ inputValue, inputEvents }">
-      <input
-        :value="inputValue.start"
-        v-on="inputEvents.start"
-      />
-      <input
-        :value="inputValue.end"
-        v-on="inputEvents.end"
-      />
-    </template>
-    </v-date-picker>
+  <DatePickerWarp :v-model="range"/>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick } from 'vue';
+import { defineComponent } from 'vue';
+import DatePickerWarp from './components/datePickerWarp.vue';
+
+interface Range {
+  start: Date | null,
+  end: Date | null,
+}
+const dummyAPI = (): Promise<Range>  => {
+      return new Promise(resolve => {setTimeout(() => {
+        resolve({
+            start: new Date('2012-10-01'),
+            end: new Date('2022-11-01'),
+          })
+      }, 500)});
+}
 
 export default defineComponent({
   name: 'App',
-  data() {
-    return {range :{}}
+  components: {
+    DatePickerWarp
   },
-  mounted(){
-    nextTick(() => {
-      setTimeout(() => {
-        this.range = {
-      start: new Date('2012-10-01'),
-      end: new Date('2022-11-01')
-    }
-
-
-      }, 5000)
-
-
-    })
-    
-  }
+  data() {
+    return {range :{start: null, end: null} as Range}
+  },
+  async mounted(){
+    this.range = await dummyAPI();
+  },
 });
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
