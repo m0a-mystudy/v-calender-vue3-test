@@ -1,17 +1,42 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <v-date-picker v-model="range" mode="dateTime" is24hr is-range>
+      <template v-slot="{ inputValue, inputEvents }">
+      <input
+        :value="inputValue.start"
+        v-on="inputEvents.start"
+      />
+      <input
+        :value="inputValue.end"
+        v-on="inputEvents.end"
+      />
+    </template>
+    </v-date-picker>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script lang="ts">
+import { defineComponent, nextTick } from 'vue';
 
-export default {
+export default defineComponent({
   name: 'App',
-  components: {
-    HelloWorld
+  data() {
+    return {range :{}}
+  },
+  mounted(){
+    nextTick(() => {
+      setTimeout(() => {
+        this.range = {
+      start: new Date('2012-10-01'),
+      end: new Date('2022-11-01')
+    }
+
+
+      }, 5000)
+
+
+    })
+    
   }
-}
+});
 </script>
 
 <style>
